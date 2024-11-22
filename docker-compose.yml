@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-brewery-app
+    container_name: laravel-brewery-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./logs/apache2:/var/log/apache2
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: laravel-brewery-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: brewery_db
+      MYSQL_USER: brewery_user
+      MYSQL_PASSWORD: brewery_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
